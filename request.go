@@ -1,47 +1,50 @@
 package alexa
 
 // constants
+type IntentName string
 
 // built in intents
 const (
 	//HelpIntent is the Alexa built-in Help Intent
-	HelpIntent = "AMAZON.HelpIntent"
+	HelpIntent IntentName = "AMAZON.HelpIntent"
 
 	//CancelIntent is the Alexa built-in Cancel Intent
-	CancelIntent = "AMAZON.CancelIntent"
+	CancelIntent IntentName = "AMAZON.CancelIntent"
 
 	//StopIntent is the Alexa built-in Stop Intent
-	StopIntent = "AMAZON.StopIntent"
+	StopIntent IntentName = "AMAZON.StopIntent"
 )
 
 // locales
+type Locale string
+
 const (
 	// LocaleItalian is the locale for Italian
-	LocaleItalian = "it-IT"
+	LocaleItalian Locale = "it-IT"
 
 	// LocaleGerman is the locale for standard dialect German
-	LocaleGerman = "de-DE"
+	LocaleGerman Locale = "de-DE"
 
 	// LocaleAustralianEnglish is the locale for Australian English
-	LocaleAustralianEnglish = "en-AU"
+	LocaleAustralianEnglish Locale = "en-AU"
 
 	//LocaleCanadianEnglish is the locale for Canadian English
-	LocaleCanadianEnglish = "en-CA"
+	LocaleCanadianEnglish Locale = "en-CA"
 
 	//LocaleBritishEnglish is the locale for UK English
-	LocaleBritishEnglish = "en-GB"
+	LocaleBritishEnglish Locale = "en-GB"
 
 	//LocaleIndianEnglish is the locale for Indian English
-	LocaleIndianEnglish = "en-IN"
+	LocaleIndianEnglish Locale = "en-IN"
 
 	//LocaleAmericanEnglish is the locale for American English
-	LocaleAmericanEnglish = "en-US"
+	LocaleAmericanEnglish Locale = "en-US"
 
 	// LocaleJapanese is the locale for Japanese
 	LocaleJapanese = "ja-JP"
 )
 
-func IsEnglish(locale string) bool {
+func IsEnglish(locale Locale) bool {
 	switch locale {
 	case LocaleAmericanEnglish:
 		return true
@@ -68,42 +71,75 @@ type Request struct {
 	Body    ReqBody `json:"request"`
 	Context Context `json:"context"`
 }
+type User struct {
+	UserID      string `json:"userId"`
+	AccessToken string `json:"accessToken,omitempty"`
+}
 
 // Session represents the Alexa skill session
 type Session struct {
-	New         bool   `json:"new"`
-	SessionID   string `json:"sessionId"`
-	Application struct {
-		ApplicationID string `json:"applicationId"`
-	} `json:"application"`
-	Attributes map[string]interface{} `json:"attributes"`
-	User       struct {
-		UserID      string `json:"userId"`
-		AccessToken string `json:"accessToken,omitempty"`
-	} `json:"user"`
+	New         bool                   `json:"new"`
+	SessionID   string                 `json:"sessionId"`
+	Application Application            `json:"application"`
+	Attributes  map[string]interface{} `json:"attributes"`
+	User        User                   `json:"user"`
+}
+
+// Video viewport shape constants
+type Shape string
+const (
+	ROUND Shape = "ROUND"
+	RECTANGLE Shape = "RECTANGLE"
+)
+
+// New: Video support
+type Viewport struct {
+	Experiences []struct {
+		ArcMinuteWidth int `json:"arcMinuteWidth,omitempty"`
+		ArcMinuteHeight int `json:"arcMinuteHeight,omitempty"`
+		CanRotate bool `json:"canRotate"`
+		CanResize bool `json:"canResize"`
+	} `json:"experiences"`
+	Shape Shape `json:"shape"`
+	PixelWidth int `json:"pixelWidth"`
+	PixelHeight int `json:"pixelHeight"`
+	CurrentPixelWidth int `json:"currentPixelWidth"`
+	CurrentPixelHeight int `json:"currentPixelHeight"`
+	Dpi int `json:"dpi"`
+	Touch []string `json:"touch"`
+	Keyboard []string `json:"keyboard,omitempty"`
+	Video struct {
+		Codecs []string `json:"codecs,omitempty"`
+	}`json:"video,omitempty"`
+}
+
+type Device struct {
+	DeviceID string `json:"deviceId,omitempty"`
+}
+
+type Application struct {
+	ApplicationID string `json:"applicationId,omitempty"`
+}
+
+type System struct {
+	APIAccessToken string      `json:"apiAccessToken"`
+	Device         Device      `json:"device,omitempty"`
+	Application    Application `json:"application,omitempty"`
 }
 
 // Context represents the Alexa skill request context
 type Context struct {
-	System struct {
-		APIAccessToken string `json:"apiAccessToken"`
-		Device         struct {
-			DeviceID string `json:"deviceId,omitempty"`
-		} `json:"device,omitempty"`
-		Application struct {
-			ApplicationID string `json:"applicationId,omitempty"`
-		} `json:"application,omitempty"`
-	} `json:"System,omitempty"`
+	System System `json:"System,omitempty"`
 }
 
 // ReqBody is the actual request information
 type ReqBody struct {
-	Type      string `json:"type"`
-	RequestID string `json:"requestId"`
-	Timestamp string `json:"timestamp"`
-	Locale    string `json:"locale"`
-	Intent    Intent `json:"intent,omitempty"`
-	Reason    string `json:"reason,omitempty"`
+	Type        string `json:"type"`
+	RequestID   string `json:"requestId"`
+	Timestamp   string `json:"timestamp"`
+	Locale      string `json:"locale"`
+	Intent      Intent `json:"intent,omitempty"`
+	Reason      string `json:"reason,omitempty"`
 	DialogState string `json:"dialogState,omitempty"`
 }
 
@@ -115,18 +151,20 @@ type Intent struct {
 
 // Slot is an Alexa skill slot
 type Slot struct {
-	Name  			  string `json:"name"`
-	Value 			  string `json:"value"`
-	Resolutions  Resolutions `json:"resolutions"`
+	Name        string      `json:"name"`
+	Value       string      `json:"value"`
+	Resolutions Resolutions `json:"resolutions"`
+}
+
+type ResolutionPerAuthority []struct {
+	Values []struct {
+		Value struct {
+			Name string `json:"name"`
+			Id   string `json:"id"`
+		} `json:"value"`
+	} `json:"values"`
 }
 
 type Resolutions struct {
-	ResolutionPerAuthority []struct{
-		Values []struct{
-			Value struct{
-				Name string `json:"name"`
-				Id   string `json:"id"`
-			} `json:"value"`
-		} `json:"values"`
-	} `json:"resolutionsPerAuthority"`
+	ResolutionPerAuthority ResolutionPerAuthority `json:"resolutionsPerAuthority"`
 }
