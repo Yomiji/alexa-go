@@ -61,6 +61,8 @@ type InSkillProductResponse struct {
 	IsTruncated     string           `json:"isTruncated"`
 	NextToken       string           `json:"nextToken"`
 }
+
+
 func checkErr(err error) {
 	if err != nil {
 		//TODO: logging mechanism here
