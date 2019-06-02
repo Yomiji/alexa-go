@@ -17,7 +17,6 @@ const (
 
 // locales
 type Locale string
-
 const (
 	// LocaleItalian is the locale for Italian
 	LocaleItalian Locale = "it-IT"
@@ -71,6 +70,7 @@ type Request struct {
 	Body    ReqBody `json:"request"`
 	Context Context `json:"context"`
 }
+
 type User struct {
 	UserID      string `json:"userId"`
 	AccessToken string `json:"accessToken,omitempty"`
@@ -125,6 +125,7 @@ type System struct {
 	APIAccessToken string      `json:"apiAccessToken"`
 	Device         Device      `json:"device,omitempty"`
 	Application    Application `json:"application,omitempty"`
+	APIEndpoint string `json:"apiEndpoint"`
 }
 
 // Context represents the Alexa skill request context
@@ -137,7 +138,7 @@ type ReqBody struct {
 	Type        string `json:"type"`
 	RequestID   string `json:"requestId"`
 	Timestamp   string `json:"timestamp"`
-	Locale      string `json:"locale"`
+	Locale      Locale `json:"locale"`
 	Intent      Intent `json:"intent,omitempty"`
 	Reason      string `json:"reason,omitempty"`
 	DialogState string `json:"dialogState,omitempty"`
