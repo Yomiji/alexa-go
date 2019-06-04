@@ -15,6 +15,14 @@ const (
 	StopIntent IntentName = "AMAZON.StopIntent"
 )
 
+type RequestType string
+const (
+	LaunchRequest RequestType = "LaunchRequest"
+	CanFulfillIntentRequest RequestType = "CanFulfillIntentRequest"
+	IntentRequest RequestType = "IntentRequest"
+	SessionEndedRequest RequestType = "SessionEndedRequest"
+)
+
 // locales
 type Locale string
 const (
