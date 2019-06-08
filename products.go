@@ -44,16 +44,16 @@ const (
 )
 
 type InSkillProduct struct {
-	ProductId              string            `json:"product_id"`
-	ReferenceName          string            `json:"reference_name"`
-	Type                   ProductType       `json:"type"`
-	Name                   string            `json:"name"`
-	Summary                string            `json:"summary"`
-	Entitled               EntitlementState  `json:"entitled"`
-	Purchasable            PurchaseState     `json:"purchasable"`
-	EntitlementReason      EntitlementReason `json:"entitlementReason,omitempty"`
-	ActiveEntitlementCount int               `json:"activeEntitlementCount"`
-	PurchaseMode           PurchaseMode      `json:"purchaseMode"`
+	ProductId              string           `json:"product_id"`
+	ReferenceName          string           `json:"reference_name"`
+	Type                   ProductType      `json:"type"`
+	Name                   string           `json:"name"`
+	Summary                string           `json:"summary"`
+	Entitled               EntitlementState `json:"entitled"`
+	Purchasable            PurchaseState    `json:"purchasable"`
+	EntitlementReason      string           `json:"entitlementReason,omitempty"`
+	ActiveEntitlementCount int              `json:"activeEntitlementCount"`
+	PurchaseMode           PurchaseMode     `json:"purchaseMode"`
 }
 
 type InSkillProductResponse struct {
@@ -61,7 +61,6 @@ type InSkillProductResponse struct {
 	IsTruncated     string           `json:"isTruncated"`
 	NextToken       string           `json:"nextToken"`
 }
-
 
 func checkErr(err error) {
 	if err != nil {
@@ -76,7 +75,7 @@ func GetInSkillProducts(request Request) (products []InSkillProduct, err error) 
 	defer func() {
 		if v := recover(); v != nil {
 			products = nil
-			if e,ok := v.(error); ok {
+			if e, ok := v.(error); ok {
 				err = e
 			}
 		}
@@ -94,7 +93,7 @@ func GetInSkillProducts(request Request) (products []InSkillProduct, err error) 
 
 	// establish required headers for ISP api
 	getRequest.Header.Add("Accept-Language", string(request.Body.Locale))
-	getRequest.Header.Add("Authorization", "Bearer " + string(request.Context.System.APIAccessToken))
+	getRequest.Header.Add("Authorization", "Bearer "+string(request.Context.System.APIAccessToken))
 
 	resp, err := client.Do(getRequest)
 	checkErr(err)

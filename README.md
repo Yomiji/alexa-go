@@ -3,7 +3,7 @@
 ### Install
 
 ```console
-go get github.com/arienmalec/alexa-go
+go get github.com/Yomiji/alexa-go
 ```
 
 ### Usage
@@ -18,7 +18,7 @@ The following is a minimal AWS Lambda implementing "Hello, World" as an Alexa sk
 package main
 
 import (
-	"github.com/arienmalec/alexa-go"
+	"github.com/Yomiji/alexa-go"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
@@ -42,7 +42,7 @@ The following is a Lambda delivering localized content to users and handling mul
 package main
 
 import (
-	"github.com/arienmalec/alexa-go"
+	"github.com/Yomiji/alexa-go"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
@@ -93,3 +93,13 @@ func main() {
 
 Request/Response struct layout influenced by `https://github.com/mikeflynn/go-alexa` which was written before Go was an AWS Lambda native language.
 
+### Modifications in this Fork
+
+* Added In-Skill Product API support
+* Added Viewport to Context object
+* Added CanFulfillIntentRequest support
+* Type aliased constant enumerations of commonly used request types and intents
+
+### Fork TODO
+* Add tests
+* Add examples

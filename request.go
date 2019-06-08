@@ -16,15 +16,17 @@ const (
 )
 
 type RequestType string
+
 const (
-	LaunchRequest RequestType = "LaunchRequest"
+	LaunchRequest           RequestType = "LaunchRequest"
 	CanFulfillIntentRequest RequestType = "CanFulfillIntentRequest"
-	IntentRequest RequestType = "IntentRequest"
-	SessionEndedRequest RequestType = "SessionEndedRequest"
+	IntentRequest           RequestType = "IntentRequest"
+	SessionEndedRequest     RequestType = "SessionEndedRequest"
 )
 
 // locales
 type Locale string
+
 const (
 	// LocaleItalian is the locale for Italian
 	LocaleItalian Locale = "it-IT"
@@ -95,30 +97,31 @@ type Session struct {
 
 // Video viewport shape constants
 type Shape string
+
 const (
-	ROUND Shape = "ROUND"
+	ROUND     Shape = "ROUND"
 	RECTANGLE Shape = "RECTANGLE"
 )
 
 // New: Video support
 type Viewport struct {
 	Experiences []struct {
-		ArcMinuteWidth int `json:"arcMinuteWidth,omitempty"`
-		ArcMinuteHeight int `json:"arcMinuteHeight,omitempty"`
-		CanRotate bool `json:"canRotate"`
-		CanResize bool `json:"canResize"`
+		ArcMinuteWidth  int  `json:"arcMinuteWidth,omitempty"`
+		ArcMinuteHeight int  `json:"arcMinuteHeight,omitempty"`
+		CanRotate       bool `json:"canRotate"`
+		CanResize       bool `json:"canResize"`
 	} `json:"experiences"`
-	Shape Shape `json:"shape"`
-	PixelWidth int `json:"pixelWidth"`
-	PixelHeight int `json:"pixelHeight"`
-	CurrentPixelWidth int `json:"currentPixelWidth"`
-	CurrentPixelHeight int `json:"currentPixelHeight"`
-	Dpi int `json:"dpi"`
-	Touch []string `json:"touch"`
-	Keyboard []string `json:"keyboard,omitempty"`
-	Video struct {
+	Shape              Shape    `json:"shape"`
+	PixelWidth         int      `json:"pixelWidth"`
+	PixelHeight        int      `json:"pixelHeight"`
+	CurrentPixelWidth  int      `json:"currentPixelWidth"`
+	CurrentPixelHeight int      `json:"currentPixelHeight"`
+	Dpi                int      `json:"dpi"`
+	Touch              []string `json:"touch"`
+	Keyboard           []string `json:"keyboard,omitempty"`
+	Video              struct {
 		Codecs []string `json:"codecs,omitempty"`
-	}`json:"video,omitempty"`
+	} `json:"video,omitempty"`
 }
 
 type Device struct {
@@ -133,12 +136,13 @@ type System struct {
 	APIAccessToken string      `json:"apiAccessToken"`
 	Device         Device      `json:"device,omitempty"`
 	Application    Application `json:"application,omitempty"`
-	APIEndpoint string `json:"apiEndpoint"`
+	APIEndpoint    string      `json:"apiEndpoint"`
 }
 
 // Context represents the Alexa skill request context
 type Context struct {
-	System System `json:"System,omitempty"`
+	System   System   `json:"System,omitempty"`
+	Viewport Viewport `json:"Viewport,omitempty"`
 }
 
 // ReqBody is the actual request information
@@ -154,7 +158,7 @@ type ReqBody struct {
 
 // Intent is the Alexa skill intent
 type Intent struct {
-	Name  string          `json:"name"`
+	Name  IntentName      `json:"name"`
 	Slots map[string]Slot `json:"slots"`
 }
 
