@@ -29,23 +29,25 @@ type Response struct {
 	Body              ResBody                `json:"response"`
 }
 
-
 // ResBody is the actual body of the response
 type ResBody struct {
-	OutputSpeech     *Payload  `json:"outputSpeech,omitempty"`
-	Card             *Payload  `json:"card,omitempty"`
-	Reprompt         *Reprompt `json:"reprompt,omitempty"`
-	Directives       []Directives `json:"directives,omitempty"`
-	ShouldEndSession bool      `json:"shouldEndSession"`
+	OutputSpeech     *Payload         `json:"outputSpeech,omitempty"`
+	Card             *Payload         `json:"card,omitempty"`
+	Reprompt         *Reprompt        `json:"reprompt,omitempty"`
+	Directives       []Directives     `json:"directives,omitempty"`
+	ShouldEndSession bool             `json:"shouldEndSession"`
 	CanFulfillIntent CanFulfillIntent `json:"canFulFillIntent,omitempty"`
 }
+
+type CanFulfillSlotDefinition struct {
+	CanUnderstand string `json:"canUnderstand"`
+	CanFulfill    string `json:"can_fulfill"`
+}
+
 // Body structure of the CanFulfillIntentResponse
 type CanFulfillIntent struct {
-	CanFulfill string `json:"canFulfill"`
-	Slots map[string]struct {
-		CanUnderstand string `json:"canUnderstand"`
-		CanFulfill string `json:"can_fulfill"`
-	}`json:"slots,omitempty"`
+	CanFulfill string                              `json:"canFulfill"`
+	Slots      map[string]CanFulfillSlotDefinition `json:"slots,omitempty"`
 }
 
 // Reprompt is imformation
