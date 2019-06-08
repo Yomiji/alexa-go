@@ -147,7 +147,7 @@ type Context struct {
 
 // ReqBody is the actual request information
 type ReqBody struct {
-	Type        string `json:"type"`
+	Type        RequestType `json:"type"`
 	RequestID   string `json:"requestId"`
 	Timestamp   string `json:"timestamp"`
 	Locale      Locale `json:"locale"`
