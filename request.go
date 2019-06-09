@@ -2,7 +2,9 @@ package alexa
 
 // constants
 type IntentName string
-
+func (b IntentName) String() string {
+	return string(b)
+}
 // built in intents
 const (
 	//HelpIntent is the Alexa built-in Help Intent
@@ -16,7 +18,9 @@ const (
 )
 
 type RequestType string
-
+func (b RequestType) String() string {
+	return string(b)
+}
 const (
 	LaunchRequest           RequestType = "LaunchRequest"
 	CanFulfillIntentRequest RequestType = "CanFulfillIntentRequest"
@@ -26,7 +30,9 @@ const (
 
 // locales
 type Locale string
-
+func (b Locale) String() string {
+	return string(b)
+}
 const (
 	// LocaleItalian is the locale for Italian
 	LocaleItalian Locale = "it-IT"
@@ -102,7 +108,9 @@ const (
 	ROUND     Shape = "ROUND"
 	RECTANGLE Shape = "RECTANGLE"
 )
-
+func (b Shape) String() string {
+	return string(b)
+}
 // New: Video support
 type Viewport struct {
 	Experiences []struct {
