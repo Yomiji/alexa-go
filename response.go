@@ -29,6 +29,7 @@ type Response struct {
 	Body              ResBody                `json:"response"`
 }
 
+//TODO: Ensure that directives is passable to ISP API
 // ResBody is the actual body of the response
 type ResBody struct {
 	OutputSpeech     *Payload         `json:"outputSpeech,omitempty"`
@@ -54,10 +55,19 @@ type CanFulfillIntent struct {
 type Reprompt struct {
 	OutputSpeech Payload `json:"outputSpeech,omitempty"`
 }
+type ISPPayload struct {
+	InSkillProduct struct {
+		ProductId string `json:"productId"`
+	} `json:"InSkillProduct"`
+	UpsellMessage string `json:"upsellMessage,omitempty"`
+}
 
 // Directives is imformation
 type Directives struct {
 	Type          string         `json:"type,omitempty"`
+	Name          string         `json:"name,omitempty"`
+	Payload       ISPPayload     `json:"payload,omitempty"`
+	Token         string         `json:"token,omitempty"`
 	SlotToElicit  string         `json:"slotToElicit,omitempty"`
 	UpdatedIntent *UpdatedIntent `json:"UpdatedIntent,omitempty"`
 	PlayBehavior  string         `json:"playBehavior,omitempty"`
