@@ -44,16 +44,16 @@ const (
 )
 
 type InSkillProduct struct {
-	ProductId              string           `json:"productId"`
-	ReferenceName          string           `json:"reference_name"`
-	Type                   ProductType      `json:"type"`
-	Name                   string           `json:"name"`
-	Summary                string           `json:"summary"`
-	Entitled               EntitlementState `json:"entitled"`
-	Purchasable            PurchaseState    `json:"purchasable"`
+	ProductId              string           `json:"productId,omitempty"`
+	ReferenceName          string           `json:"reference_name,omitempty"`
+	Type                   ProductType      `json:"type,omitempty"`
+	Name                   string           `json:"name,omitempty"`
+	Summary                string           `json:"summary,omitempty"`
+	Entitled               EntitlementState `json:"entitled,omitempty"`
+	Purchasable            PurchaseState    `json:"purchasable,omitempty"`
 	EntitlementReason      string           `json:"entitlementReason,omitempty"`
-	ActiveEntitlementCount int              `json:"activeEntitlementCount"`
-	PurchaseMode           PurchaseMode     `json:"purchaseMode"`
+	ActiveEntitlementCount int              `json:"activeEntitlementCount,omitempty"`
+	PurchaseMode           PurchaseMode     `json:"purchaseMode,omitempty"`
 }
 
 type InSkillProductResponse struct {
