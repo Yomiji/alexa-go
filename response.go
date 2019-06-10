@@ -56,9 +56,7 @@ type Reprompt struct {
 	OutputSpeech Payload `json:"outputSpeech,omitempty"`
 }
 type ISPPayload struct {
-	InSkillProduct struct {
-		ProductId string `json:"productId"`
-	} `json:"InSkillProduct"`
+	InSkillProduct InSkillProduct`json:"InSkillProduct,omitempty"`
 	UpsellMessage string `json:"upsellMessage,omitempty"`
 }
 
