@@ -2,9 +2,11 @@ package alexa
 
 // constants
 type IntentName string
+
 func (b IntentName) String() string {
 	return string(b)
 }
+
 // built in intents
 const (
 	//HelpIntent is the Alexa built-in Help Intent
@@ -18,21 +20,26 @@ const (
 )
 
 type RequestType string
+
 func (b RequestType) String() string {
 	return string(b)
 }
+
 const (
-	LaunchRequest           RequestType = "LaunchRequest"
-	CanFulfillIntentRequest RequestType = "CanFulfillIntentRequest"
-	IntentRequest           RequestType = "IntentRequest"
-	SessionEndedRequest     RequestType = "SessionEndedRequest"
+	LaunchRequest              RequestType = "LaunchRequest"
+	CanFulfillIntentRequest    RequestType = "CanFulfillIntentRequest"
+	IntentRequest              RequestType = "IntentRequest"
+	SessionEndedRequest        RequestType = "SessionEndedRequest"
+	ConnectionsResponseRequest RequestType = "Connections.Response"
 )
 
 // locales
 type Locale string
+
 func (b Locale) String() string {
 	return string(b)
 }
+
 const (
 	// LocaleItalian is the locale for Italian
 	LocaleItalian Locale = "it-IT"
@@ -108,9 +115,11 @@ const (
 	ROUND     Shape = "ROUND"
 	RECTANGLE Shape = "RECTANGLE"
 )
+
 func (b Shape) String() string {
 	return string(b)
 }
+
 // New: Video support
 type Viewport struct {
 	Experiences []struct {
@@ -153,15 +162,41 @@ type Context struct {
 	Viewport Viewport `json:"Viewport,omitempty"`
 }
 
+type ConnectionResponseStatus struct {
+	Code string `json:"code"`
+	Message string `json:"message"`
+}
+
+type PurchaseResult string
+func (b PurchaseResult) String() string {
+	return string(b)
+}
+const (
+	ACCEPTED PurchaseResult = "ACCEPTED"
+	DECLINED PurchaseResult = "DECLINED"
+	ALREADY_PURCHASED PurchaseResult = "ALREADY_PURCHASED"
+	ERROR PurchaseResult = "ERROR"
+)
+
+type ConnectionResponsePayload struct {
+	PurchaseResult PurchaseResult `json:"purchaseResult"`
+	ProductId string `json:"productId"`
+	Message string `json:"message"`
+}
+
 // ReqBody is the actual request information
 type ReqBody struct {
 	Type        RequestType `json:"type"`
-	RequestID   string `json:"requestId"`
-	Timestamp   string `json:"timestamp"`
-	Locale      Locale `json:"locale"`
-	Intent      Intent `json:"intent,omitempty"`
-	Reason      string `json:"reason,omitempty"`
-	DialogState string `json:"dialogState,omitempty"`
+	RequestID   string      `json:"requestId"`
+	Timestamp   string      `json:"timestamp"`
+	Locale      Locale      `json:"locale"`
+	Intent      Intent      `json:"intent,omitempty"`
+	Reason      string      `json:"reason,omitempty"`
+	DialogState string      `json:"dialogState,omitempty"`
+	Name string `json:"name,omitempty"`
+	Status ConnectionResponseStatus `json:"status,omitempty"`
+	Payload ConnectionResponsePayload `json:"payload,omitempty"`
+	Token string `json:"token"`
 }
 
 // Intent is the Alexa skill intent
