@@ -2,8 +2,11 @@ package alexa
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"github.com/Yomiji/slog"
+	"time"
 )
 
 const InSkillProductListRequestAPI string = "/v1/users/~current/skills/~current/inSkillProducts"
@@ -64,14 +67,17 @@ type InSkillProductResponse struct {
 
 func checkErr(err error) {
 	if err != nil {
-		//TODO: logging mechanism here
+		slog.Fail("error occurred: %v", err)
 		panic(err)
 	}
 }
 
+var ispDefaultRequestTimeout time.Duration = 30
+var ISPRequestTimeout time.Duration = 30
+
 // Gets In-Skill Products for the user, based on Alexa Skill API
 // see https://developer.amazon.com/docs/in-skill-purchase/in-skill-product-service.html
-func GetInSkillProducts(request Request) (products []InSkillProduct, err error) {
+func GetInSkillProducts(request Request, logWriter *io.Writer) (products []InSkillProduct, err error) {
 	defer func() {
 		if v := recover(); v != nil {
 			products = nil
@@ -81,11 +87,31 @@ func GetInSkillProducts(request Request) (products []InSkillProduct, err error) 
 		}
 	}()
 
+	if logWriter != nil {
+		slog.SetLogWriter(*logWriter)
+	}
+
 	// establish http client
 	client := &http.Client{}
 
+	if logWriter != nil {
+		slog.Debug("Constructing client for ISP deployment")
+	}
+
+	// set client timeout
+	//noinspection GoBoolExpressions
+	if ISPRequestTimeout > 0 {
+		client.Timeout = ISPRequestTimeout * time.Second
+	} else {
+		client.Timeout = ispDefaultRequestTimeout * time.Second
+	}
+
 	// get api host
 	apiHost := request.Context.System.APIEndpoint
+
+	if logWriter != nil {
+		slog.Debug("Generating request.")
+	}
 
 	// begin building request to ISP API
 	getRequest, err := http.NewRequest(http.MethodGet, apiHost, nil)
@@ -95,7 +121,14 @@ func GetInSkillProducts(request Request) (products []InSkillProduct, err error) 
 	getRequest.Header.Add("Accept-Language", string(request.Body.Locale))
 	getRequest.Header.Add("Authorization", "Bearer "+string(request.Context.System.APIAccessToken))
 
+	if logWriter != nil {
+		slog.Debug("Performing request: %v", getRequest)
+	}
 	resp, err := client.Do(getRequest)
+
+	if logWriter != nil {
+		slog.Debug("Request completed.")
+	}
 	checkErr(err)
 
 	// defer the close, ensuring the panic happens to recover later
@@ -111,6 +144,10 @@ func GetInSkillProducts(request Request) (products []InSkillProduct, err error) 
 	// convert to a product list
 	err = json.Unmarshal(body, products)
 	checkErr(err)
+
+	if logWriter != nil {
+		slog.Info("Retrieved %v products", len(products))
+	}
 
 	// return the product list
 	return products, nil
