@@ -2,10 +2,9 @@ package alexa
 
 import (
 	"encoding/json"
-	"io"
+	"github.com/Yomiji/slog"
 	"io/ioutil"
 	"net/http"
-	"github.com/Yomiji/slog"
 	"time"
 )
 
