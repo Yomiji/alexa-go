@@ -77,7 +77,7 @@ var ISPRequestTimeout time.Duration = 30
 
 // Gets In-Skill Products for the user, based on Alexa Skill API
 // see https://developer.amazon.com/docs/in-skill-purchase/in-skill-product-service.html
-func GetInSkillProducts(request Request, logWriter *io.Writer) (products []InSkillProduct, err error) {
+func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkillProduct, err error) {
 	defer func() {
 		if v := recover(); v != nil {
 			products = nil
@@ -87,14 +87,14 @@ func GetInSkillProducts(request Request, logWriter *io.Writer) (products []InSki
 		}
 	}()
 
-	if logWriter != nil {
-		slog.SetLogWriter(*logWriter)
+	if loggingEnabled  {
+		slog.Debug("Entering GetInSkillProducts")
 	}
 
 	// establish http client
 	client := &http.Client{}
 
-	if logWriter != nil {
+	if loggingEnabled {
 		slog.Debug("Constructing client for ISP deployment")
 	}
 
@@ -109,7 +109,7 @@ func GetInSkillProducts(request Request, logWriter *io.Writer) (products []InSki
 	// get api host
 	apiHost := request.Context.System.APIEndpoint
 
-	if logWriter != nil {
+	if loggingEnabled {
 		slog.Debug("Generating request.")
 	}
 
@@ -121,12 +121,12 @@ func GetInSkillProducts(request Request, logWriter *io.Writer) (products []InSki
 	getRequest.Header.Add("Accept-Language", string(request.Body.Locale))
 	getRequest.Header.Add("Authorization", "Bearer "+string(request.Context.System.APIAccessToken))
 
-	if logWriter != nil {
+	if loggingEnabled {
 		slog.Debug("Performing request: %v", getRequest)
 	}
 	resp, err := client.Do(getRequest)
 
-	if logWriter != nil {
+	if loggingEnabled {
 		slog.Debug("Request completed.")
 	}
 	checkErr(err)
@@ -145,7 +145,7 @@ func GetInSkillProducts(request Request, logWriter *io.Writer) (products []InSki
 	err = json.Unmarshal(body, products)
 	checkErr(err)
 
-	if logWriter != nil {
+	if loggingEnabled {
 		slog.Info("Retrieved %v products", len(products))
 	}
 
