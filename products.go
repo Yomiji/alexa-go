@@ -106,7 +106,7 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 	}
 
 	// get api host
-	apiHost := request.Context.System.APIEndpoint
+	apiHost := request.Context.System.APIEndpoint + "/v1/users/~current/skills/~current/inSkillProducts"
 
 	if loggingEnabled {
 		slog.Debug("Generating request.")
