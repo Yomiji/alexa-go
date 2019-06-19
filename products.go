@@ -2,7 +2,6 @@ package alexa
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/Yomiji/slog"
 	"io/ioutil"
 	"net/http"
@@ -118,30 +117,19 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 	}
 
 	// begin building request to ISP API
-	getRequest, err := http.NewRequest(http.MethodGet, apiHost, http.NoBody)
+	url := "http://api.amazonalexa.com/v1/users/~current/skills/~current/inSkillProducts"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("Authorization", "Bearer "+ request.Context.System.APIAccessToken)
+	req.Header.Add("Accept-Language", "en-US")
+	req.Header.Add("cache-control", "no-cache")
+	req.Header.Add("Postman-Token", "aafb6511-5d9d-4ce4-9856-ef46ec8f0a2d")
+
+	res, err := http.DefaultClient.Do(req)
 	checkErr(err)
-
-	// establish required headers for ISP api
-	getRequest.Header.Set("Accept-Language", string(request.Body.Locale))
-	getRequest.Header.Set("Authorization", fmt.Sprintf("Bearer %s", request.Context.System.APIAccessToken))
-	if loggingEnabled {
-		slog.Debug("Performing request: %v", getRequest)
-	}
-	resp, err := client.Do(getRequest)
-
-	if loggingEnabled {
-		slog.Debug("Request completed.")
-	}
-	checkErr(err)
-
-	// defer the close, ensuring the panic happens to recover later
-	defer func() {
-		err := resp.Body.Close()
-		checkErr(err)
-	}()
-
-	// get the body bytes
-	body, err := ioutil.ReadAll(resp.Body)
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
 	checkErr(err)
 
 	// convert to a product list
