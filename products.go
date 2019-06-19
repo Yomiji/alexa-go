@@ -114,13 +114,12 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 	}
 
 	// begin building request to ISP API
-	getRequest, err := http.NewRequest(http.MethodGet, apiHost, nil)
+	getRequest, err := http.NewRequest(http.MethodGet, apiHost, http.NoBody)
 	checkErr(err)
 
 	// establish required headers for ISP api
-	getRequest.Header.Add("Accept-Language", string(request.Body.Locale))
-	getRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", request.Context.System.APIAccessToken))
-
+	getRequest.Header.Set("Accept-Language", string(request.Body.Locale))
+	getRequest.Header.Set("Authorization", fmt.Sprintf("Bearer %s", request.Context.System.APIAccessToken))
 	if loggingEnabled {
 		slog.Debug("Performing request: %v", getRequest)
 	}
