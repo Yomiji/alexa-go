@@ -6,6 +6,7 @@ import (
 	"github.com/Yomiji/slog"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -108,6 +109,9 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 
 	// get api host
 	apiHost := request.Context.System.APIEndpoint + "/v1/users/~current/skills/~current/inSkillProducts"
+	if strings.Contains(apiHost, "https") {
+		apiHost = strings.Replace(apiHost, "https", "http", 1)
+	}
 
 	if loggingEnabled {
 		slog.Debug("Generating request for endpoint %s", apiHost)
