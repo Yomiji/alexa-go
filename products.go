@@ -2,6 +2,7 @@ package alexa
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/Yomiji/slog"
 	"io/ioutil"
 	"net/http"
@@ -109,7 +110,7 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 	apiHost := request.Context.System.APIEndpoint + "/v1/users/~current/skills/~current/inSkillProducts"
 
 	if loggingEnabled {
-		slog.Debug("Generating request.")
+		slog.Debug("Generating request for endpoint %s", apiHost)
 	}
 
 	// begin building request to ISP API
@@ -118,7 +119,7 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 
 	// establish required headers for ISP api
 	getRequest.Header.Add("Accept-Language", string(request.Body.Locale))
-	getRequest.Header.Add("Authorization", "Bearer "+string(request.Context.System.APIAccessToken))
+	getRequest.Header.Add("Authorization", fmt.Sprintf("Bearer %s", request.Context.System.APIAccessToken))
 
 	if loggingEnabled {
 		slog.Debug("Performing request: %v", getRequest)
