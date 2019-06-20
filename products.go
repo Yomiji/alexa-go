@@ -143,6 +143,9 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 	body, err := ioutil.ReadAll(resp.Body)
 	checkErr(err)
 
+	if loggingEnabled {
+		slog.Debug("Body retrieved: %v", string(body))
+	}
 	// convert to a product list
 	err = json.Unmarshal(body, &products)
 	checkErr(err)
