@@ -60,7 +60,7 @@ type InSkillProduct struct {
 }
 
 type InSkillProductResponse struct {
-	InSkillProducts []InSkillProduct `json:"inSkillProductsResponse"`
+	InSkillProducts []InSkillProduct `json:"inSkillProducts"`
 	IsTruncated     string           `json:"isTruncated"`
 	NextToken       string           `json:"nextToken"`
 }
