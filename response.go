@@ -53,7 +53,7 @@ type CanFulfillIntent struct {
 
 // Reprompt is imformation
 type Reprompt struct {
-	OutputSpeech Payload `json:"outputSpeech,omitempty"`
+	OutputSpeech *Payload `json:"outputSpeech,omitempty"`
 }
 type ISPPayload struct {
 	InSkillProduct InSkillProduct`json:"InSkillProduct,omitempty"`
