@@ -2,10 +2,10 @@ package alexa
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/Yomiji/slog"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -74,7 +74,11 @@ func checkErr(err error) {
 
 var ispDefaultRequestTimeout time.Duration = 30
 var ISPRequestTimeout time.Duration = 30
+var client = &http.Client{}
 
+func init() {
+
+}
 // Gets In-Skill Products for the user, based on Alexa Skill API
 // see https://developer.amazon.com/docs/in-skill-purchase/in-skill-product-service.html
 func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkillProduct, err error) {
@@ -91,13 +95,6 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 		slog.Debug("Entering GetInSkillProducts")
 	}
 
-	// establish http client
-	client := &http.Client{}
-
-	if loggingEnabled {
-		slog.Debug("Constructing client for ISP deployment")
-	}
-
 	// set client timeout
 	//noinspection GoBoolExpressions
 	if ISPRequestTimeout > 0 {
@@ -106,30 +103,44 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 		client.Timeout = ispDefaultRequestTimeout * time.Second
 	}
 
+	if loggingEnabled {
+		slog.Debug("Constructing client for ISP deployment")
+	}
+
+
 	// get api host
 	apiHost := request.Context.System.APIEndpoint + "/v1/users/~current/skills/~current/inSkillProducts"
-	if strings.Contains(apiHost, "https") {
-		apiHost = strings.Replace(apiHost, "https", "http", 1)
-	}
+
 
 	if loggingEnabled {
 		slog.Debug("Generating request for endpoint %s", apiHost)
 	}
 
 	// begin building request to ISP API
-	url := "http://api.amazonalexa.com/v1/users/~current/skills/~current/inSkillProducts"
-
-	req, _ := http.NewRequest("GET", url, nil)
-
-	req.Header.Add("Authorization", "Bearer "+ request.Context.System.APIAccessToken)
-	req.Header.Add("Accept-Language", "en-US")
-	req.Header.Add("cache-control", "no-cache")
-	req.Header.Add("Postman-Token", "aafb6511-5d9d-4ce4-9856-ef46ec8f0a2d")
-
-	res, err := http.DefaultClient.Do(req)
+	getRequest, err := http.NewRequest(http.MethodGet, apiHost, http.NoBody)
 	checkErr(err)
-	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
+
+	// establish required headers for ISP api
+	getRequest.Header.Set("Accept-Language", string(request.Body.Locale))
+	getRequest.Header.Set("Authorization", fmt.Sprintf("Bearer %s", request.Context.System.APIAccessToken))
+	if loggingEnabled {
+		slog.Debug("Performing request: %v", getRequest)
+	}
+	resp, err := client.Do(getRequest)
+
+	if loggingEnabled {
+		slog.Debug("Request completed.")
+	}
+	checkErr(err)
+
+	// defer the close, ensuring the panic happens to recover later
+	defer func() {
+		err := resp.Body.Close()
+		checkErr(err)
+	}()
+
+	// get the body bytes
+	body, err := ioutil.ReadAll(resp.Body)
 	checkErr(err)
 
 	// convert to a product list
