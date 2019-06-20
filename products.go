@@ -147,7 +147,8 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 		slog.Debug("Body retrieved: %v", string(body))
 	}
 	// convert to a product list
-	err = json.Unmarshal(body, &products)
+	var inSkillResponse = &InSkillProductResponse{}
+	err = json.Unmarshal(body, inSkillResponse)
 	checkErr(err)
 
 	if loggingEnabled {
@@ -155,5 +156,5 @@ func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkil
 	}
 
 	// return the product list
-	return products, nil
+	return inSkillResponse.InSkillProducts, nil
 }
