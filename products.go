@@ -76,12 +76,15 @@ var ispDefaultRequestTimeout time.Duration = 30
 var ISPRequestTimeout time.Duration = 30
 var client = &http.Client{}
 
-func init() {
+var loggingEnabled = false
 
+func ToggleDebugLogging(value bool) {
+	loggingEnabled = value
 }
+
 // Gets In-Skill Products for the user, based on Alexa Skill API
 // see https://developer.amazon.com/docs/in-skill-purchase/in-skill-product-service.html
-func GetInSkillProducts(request Request, loggingEnabled bool) (products []InSkillProduct, err error) {
+func GetInSkillProducts(request Request) (products []InSkillProduct, err error) {
 	defer func() {
 		if v := recover(); v != nil {
 			products = nil
