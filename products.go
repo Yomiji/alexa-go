@@ -48,7 +48,7 @@ const (
 
 type InSkillProduct struct {
 	ProductId              string           `json:"productId,omitempty"`
-	ReferenceName          string           `json:"reference_name,omitempty"`
+	ReferenceName          string           `json:"referenceName,omitempty"`
 	Type                   ProductType      `json:"type,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	Summary                string           `json:"summary,omitempty"`
