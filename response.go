@@ -41,13 +41,13 @@ type ResBody struct {
 }
 
 type CanFulfillSlotDefinition struct {
-	CanUnderstand string `json:"canUnderstand"`
-	CanFulfill    string `json:"can_fulfill"`
+	CanUnderstand string `json:"canUnderstand,omitempty"`
+	CanFulfill    string `json:"canFulfill,omitempty"`
 }
 
 // Body structure of the CanFulfillIntentResponse
 type CanFulfillIntent struct {
-	CanFulfill string                              `json:"canFulfill"`
+	CanFulfill string                              `json:"canFulfill,omitempty"`
 	Slots      map[string]CanFulfillSlotDefinition `json:"slots,omitempty"`
 }
 
@@ -56,8 +56,8 @@ type Reprompt struct {
 	OutputSpeech *Payload `json:"outputSpeech,omitempty"`
 }
 type ISPPayload struct {
-	InSkillProduct InSkillProduct`json:"InSkillProduct,omitempty"`
-	UpsellMessage string `json:"upsellMessage,omitempty"`
+	InSkillProduct InSkillProduct `json:"InSkillProduct,omitempty"`
+	UpsellMessage  string         `json:"upsellMessage,omitempty"`
 }
 
 // Directives is imformation
@@ -69,13 +69,16 @@ type Directives struct {
 	SlotToElicit  string         `json:"slotToElicit,omitempty"`
 	UpdatedIntent *UpdatedIntent `json:"UpdatedIntent,omitempty"`
 	PlayBehavior  string         `json:"playBehavior,omitempty"`
-	AudioItem     struct {
-		Stream struct {
-			Token                string `json:"token,omitempty"`
-			URL                  string `json:"url,omitempty"`
-			OffsetInMilliseconds int    `json:"offsetInMilliseconds,omitempty"`
-		} `json:"stream,omitempty"`
-	} `json:"audioItem,omitempty"`
+	AudioItem     AudioItem      `json:"audioItem,omitempty"`
+}
+type AudioItem struct {
+	Stream Stream `json:"stream,omitempty"`
+}
+
+type Stream struct {
+	Token                string `json:"token,omitempty"`
+	URL                  string `json:"url,omitempty"`
+	OffsetInMilliseconds int    `json:"offsetInMilliseconds,omitempty"`
 }
 
 // UpdatedIntent is to update the Intent
