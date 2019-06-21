@@ -82,6 +82,19 @@ func ToggleDebugLogging(value bool) {
 	loggingEnabled = value
 }
 
+func SimpleSlotToProducts(slot Slot, products []InSkillProduct) (product *InSkillProduct) {
+	for _,resolution := range slot.Resolutions.ResolutionPerAuthority {
+		for _,value := range resolution.Values {
+			for _,product := range products {
+				if value.Value.Id == product.ReferenceName {
+					return &product
+				}
+			}
+		}
+	}
+	return nil
+}
+
 // Gets In-Skill Products for the user, based on Alexa Skill API
 // see https://developer.amazon.com/docs/in-skill-purchase/in-skill-product-service.html
 func GetInSkillProducts(request Request) (products []InSkillProduct, err error) {
