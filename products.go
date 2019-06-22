@@ -82,6 +82,8 @@ func ToggleDebugLogging(value bool) {
 	loggingEnabled = value
 }
 
+// Assuming a slot's ID corresponds to an ISP reference name, get the ISP from the slice that
+// matches the slot
 func SimpleSlotToProducts(slot Slot, products []InSkillProduct) (product *InSkillProduct) {
 	for _,resolution := range slot.Resolutions.ResolutionPerAuthority {
 		for _,value := range resolution.Values {
@@ -176,4 +178,30 @@ func GetInSkillProducts(request Request) (products []InSkillProduct, err error) 
 
 	// return the product list
 	return products, nil
+}
+
+// get all products purchased
+func GetPurchasedProducts(products []InSkillProduct) []InSkillProduct {
+	result := make([]InSkillProduct, 0, len(products))
+
+	for _, v := range products {
+		if v.Entitled == ENTITLED {
+			result = append(result, v)
+		}
+	}
+
+	return result
+}
+
+// get all products available to purchase
+func GetAvailableProducts(products []InSkillProduct) []InSkillProduct {
+	result := make([]InSkillProduct, 0, len(products))
+
+	for _, v := range products {
+		if v.Entitled == NOT_ENTITLED {
+			result = append(result, v)
+		}
+	}
+
+	return result
 }
